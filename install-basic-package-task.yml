@@ -1,0 +1,5 @@
+---
+- name: install basic packages
+  yum:
+    name: ['vim']
+    state: installed

@@ -1,0 +1,40 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: remove packages if any
+      yum: 
+        state: removed
+        name: ['docker', 'docker-client', 
+'docker-client-latest', 'docker-common', 'docker-latest', 'docker-latest-logrotate',
+ 'docker-logrotate', 'docker-engine']
+    
+    - name: install yum-utils package
+      yum:
+        name: yum-utils
+        state: installed
+
+    - name: add docker repo
+      command: yum-config-manager --add-repo  https://download.docker.com/linux/centos/docker-ce.repo
+    
+    - name: install docker package
+      yum: 
+        name: ['docker-ce' ,'docker-ce-cli' ,'containerd.io'] 
+        state: installed
+        update_cache: yes
+
+    - name: enable docker service
+      service:
+        name: docker
+        enabled: yes
+
+    - name: start the service
+      service:
+        name: docker
+        state: started
+
+    - name: including basic package play
+      include: install-basic-package-task.yml
+
