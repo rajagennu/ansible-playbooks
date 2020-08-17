@@ -38,3 +38,6 @@
     - name: including basic package play
       include: install-basic-package-task.yml
 
+    - name: including screen configuratios play
+      include: copy-screenrc.yml
+

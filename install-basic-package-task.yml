@@ -1,5 +1,5 @@
 ---
 - name: install basic packages
   yum:
-    name: ['vim']
+    name: ['vim', 'tmux', 'screen']
     state: installed

@@ -1,0 +1,14 @@
+---
+- name: create screenlogs directory
+  command : mkdir ~/screen-logs
+
+- name: copy screenrc
+  copy:
+    src: ./screenrc
+    dest: ~/.screenrc
+    owner: cloud_user
+    group: cloud_user
+    mode: 0644    
+
+
+  
