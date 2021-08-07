@@ -1,0 +1,10 @@
+---
+- hosts: mysql
+  gather_facts: false
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+  handlers:
+

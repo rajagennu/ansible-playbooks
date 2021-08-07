@@ -1,2 +1,5 @@
 [all]
-localhost
+192.168.33.10
+
+[all:vars]
+ansible_user=vagrant

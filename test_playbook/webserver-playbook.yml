@@ -1,0 +1,25 @@
+---
+- hosts: webserver
+  become: yes
+  become_method: sudo #su,
+  gather_facts: False 
+  order: sorted #reverse_sorted, shuffle
+  become_user: root #username
+  #remote_user: tom
+
+  tasks:
+    - name: Ensure Apache is installed
+      apt: name=apache2 state=latest
+
+    - name: write the apache config file
+      copy: src=000-default.conf dest=/etc/apache2/sites-available/000-default.conf
+      notify:
+        - restart apache2
+
+    - name: apache is running
+      service: name=apache2 state=started enabled=yes use=service
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted use=service
+

@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: Run ansible command
+      debug: msg="Ansible is fun"
+    - name: we also need to test connectivity
+      ping:
