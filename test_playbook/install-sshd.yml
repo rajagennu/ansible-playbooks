@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  
+  tasks:
+
+    - name: install ssh package
+      apt:
+        name:
+         - openssh-server
+         - openssh-client
+        state: present
+
+    - name: start the service
+      service:
+        name: ssh
+        state: started
+        enabled: yes
+
