@@ -1,0 +1,7 @@
+---
+- name: install basic package
+  apt:
+    name:
+     - vim
+     - tmux
+    update_cache: yes

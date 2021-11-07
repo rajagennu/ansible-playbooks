@@ -1,0 +1,62 @@
+---
+- hosts: localhost
+  gather_facts: no
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: get uptime
+      command: uptime
+      register: result
+
+    - debug: var=result.stdout
+
+    - include: install-basic-package-playbook.yaml
+
+    - name: install pre requisities
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        update_cache: yes
+    
+    
+    - name: check if docker keyring exists
+      stat:
+        path: /usr/share/keyrings/docker-archive-keyring.gpg
+      register: keyring_file
+
+    - name: check if docker repo exists
+      stat: 
+        path: /etc/apt/sources.list.d/docker.list
+      register: docker_repo
+
+    - name: download gpg key
+      get_url: 
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /tmp/docker.key
+      when: keyring_file.stat.exists == False
+
+
+    - name: add to docker keyring
+      shell: cat /tmp/docker.key | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      when: keyring_file.stat.exists == False
+
+
+    - name: add docker repo
+      shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      when: docker_repo.stat.exists == False
+
+    - name: install docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        update_cache: yes
+
+    - include: docker-service.yaml
+
+
